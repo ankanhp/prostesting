@@ -42,7 +42,7 @@ print("Storing the output DataFrame to a different folder")
 print("Testing the result with the sample expected")
 test1 <- data.frame(matrix(unlist(expected), ncol=13, byrow=TRUE),stringsAsFactors=FALSE) %>% `colnames<-`(.[1, ]) %>% .[-1, ]
 test2 <- df1 %>% mutate_if(is.double, as.character)
-print(all_equal(test1,test2))
+print(all.equal(test1,test2))
 
 
 app <- plumb('endpoints.R')
