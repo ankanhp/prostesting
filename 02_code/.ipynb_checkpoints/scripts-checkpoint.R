@@ -8,7 +8,7 @@ load_input <- function(input) {
     
   input <- input %>%
     mutate(across(everything(), as.character)) %>% # Set all columns as character as default
-    na_if('') %>% # Set all empty strings to NA
+    mutate_all(~ifelse(is_empty(.), NA, .)) %>% # Set all empty strings to NA
     transmute(Authorized = 'Open', # Provide guidance for all lines
               BOM.USG = extBomUsg,
               Configuration.ID = extBundleConfigurationId,
@@ -1037,7 +1037,7 @@ process_configurations <- function(df, country) {
       Gross.Revenue = Quantity * LP,
       Deal.Gross.Revenue = sum(Gross.Revenue),
       Nconfig = n(),
-      Prop.COVID = if_else(Flag.COVID == 1, (End - pmax(COVID_START_DATE, Start)) / Duration, 0),
+      Prop.COVID = if_else(Flag.COVID == 1, as.numeric((End - pmax(COVID_START_DATE, Start)) / Duration), 0),
       Requested.Discount.Additional = Requested.Discount.Additional.USD / LP,
       Requested.Discount = 1 - Requested.NP / LP,
       Requested.Contra = Contra.NDP + (1 - Requested.Discount) * Contra.LP,
