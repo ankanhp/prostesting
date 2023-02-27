@@ -8,7 +8,7 @@ load_input <- function(input) {
     
   input <- input %>%
     mutate(across(everything(), as.character)) %>% # Set all columns as character as default
-    mutate_all(~ifelse(is_empty(.), NA, .)) %>% # Set all empty strings to NA
+    mutate_all(~if_else(str_trim(.x) == "", NA_character_, .x)) %>% # Set all empty strings to NA
     transmute(Authorized = 'Open', # Provide guidance for all lines
               BOM.USG = extBomUsg,
               Configuration.ID = extBundleConfigurationId,
